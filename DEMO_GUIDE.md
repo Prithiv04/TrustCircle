@@ -14,8 +14,8 @@ Since the deployed on-chain contracts are immutable and require exact `0.01 tCTC
 - **Dashboard Impact**: Animated graph showing `0.07 tCTC` and "LIVE SYNC ACTIVE" pulse.
 
 ## 🛠️ How it's built
-- **Mock Layer**: [mockCircles.ts](file:///c:/Users/shaki/OneDrive/Desktop/Trustcircle/trustcircle/src/data/mockCircles.ts)
-- **Dashboard Toggle**: `const USE_MOCK = true;` in [Dashboard.tsx](file:///c:/Users/shaki/OneDrive/Desktop/Trustcircle/trustcircle/src/components/Dashboard.tsx)
+- **Mock Layer**: [mockCircles.ts](file:///c:/Users/shaki/OneDrive/Desktop/Trustcircle/frontend/src/data/mockCircles.ts)
+- **Dashboard Toggle**: `const USE_MOCK = true;` in [Dashboard.tsx](file:///c:/Users/shaki/OneDrive/Desktop/Trustcircle/frontend/src/components/Dashboard.tsx)
 - **Chain Connection**: Still fully compatible with `wagmi` and `RainbowKit` for the CC3 Testnet.
 
 ## 📹 Video/Demo Script

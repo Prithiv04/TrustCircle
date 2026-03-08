@@ -43,7 +43,7 @@ cd trustcircle-rosca
 ### 2. Frontend
 
 ```bash
-cd trustcircle
+cd frontend
 cp .env.example .env
 # Fill in your contract addresses in .env
 npm install
@@ -68,7 +68,7 @@ Backend runs at: **http://localhost:3001**
 
 ## ⚙️ Environment Variables
 
-### Frontend (`trustcircle/.env`)
+### Frontend (`frontend/.env`)
 ```env
 VITE_CONTRACT_ADDRESSES=0xabc...,0xdef...  # Your 4x deployments
 VITE_CREDITCOIN_RPC=https://rpc.testnet.creditcoin.org
@@ -111,7 +111,7 @@ FRONTEND_URL=http://localhost:5173
 
 ```
 trustcircle-rosca/
-├── trustcircle/          # React + Vite frontend
+├── frontend/             # React + Vite frontend
 │   ├── src/
 │   │   ├── components/   # Header, Hero, Dashboard, ROSCACircleCard, etc.
 │   │   ├── hooks/        # useTrustCircle Wagmi hooks

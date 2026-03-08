@@ -5,7 +5,6 @@ import {
 import { motion } from 'framer-motion';
 import { TrendingUp, Wifi, WifiOff } from 'lucide-react';
 import { PotUpdate } from '@/hooks/useLiveCircle';
-import { formatTCTC } from '@/config/contracts';
 
 interface ContributionChartProps {
     circleId?: number;
