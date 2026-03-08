@@ -1,0 +1,43 @@
+﻿[dotenv@17.3.1] injecting env (7) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+Seeding from address: 0xA1937b8ee0E4e632976010Cf200f3959BdB6f6E8
+
+--- Seeding Contract: 0x8f1Ff851afa75D98753c8aB4352b37D07797f408 ---
+Connected to Creditcoin Testnet. Block: 4390845
+Address: 0x8f1Ff851afa75D98753c8aB4352b37D07797f408 | nextCircleId: 0
+No circles found. Creating one...
+node.exe : Failed to 
+seed 0x8f1Ff851afa75D98
+753c8aB4352b37D07797f40
+8: 
+contract.createCircle 
+is not a function
+At C:\Program Files\nod
+ejs\npx.ps1:29 char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Failed to see   
+ d ... not a functi    
+on:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+
+--- Seeding Contract: 0x68409ee9d9D9b7DfdEb4b2dd2bddb7f1312cB947 ---
+Address: 0x68409ee9d9D9b7DfdEb4b2dd2bddb7f1312cB947 | nextCircleId: 0
+No circles found. Creating one...
+Failed to seed 0x68409e
+e9d9D9b7DfdEb4b2dd2bddb
+7f1312cB947: 
+contract.createCircle 
+is not a function
+
+--- Seeding Contract: 0x6Cee7aA2E56053e2656a20097eAECbd9AD786E17 ---
+Address: 0x6Cee7aA2E56053e2656a20097eAECbd9AD786E17 | nextCircleId: 1
+Contract already has circles. Skipping.

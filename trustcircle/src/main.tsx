@@ -13,6 +13,9 @@ const config = getDefaultConfig({
     projectId: 'trustcircle-rosca-dapp',
     chains: [creditcoinTestnet],
     ssr: false,
+    batch: {
+        multicall: false, // Disable multicall to prevent state lag on testnet
+    }
 });
 
 const queryClient = new QueryClient();

@@ -1,119 +1,125 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Users, Shield, Zap, Globe } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Users, Shield, Zap, Globe, Activity } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Magnetic from './Magnetic';
 import { useAccount } from 'wagmi';
 
 const stats = [
     { label: 'Unbanked Served', value: '1.4B+', icon: Globe },
-    { label: 'Contract Deployments', value: '4x', icon: Shield },
+    { label: 'Contracts Deployed', value: '4x', icon: Shield },
     { label: 'Zero Gas Fees', value: '$0.00', icon: Zap },
     { label: 'Active Circles', value: '100%', icon: Users },
 ];
 
 const Hero: React.FC<{ onGetStarted?: () => void }> = ({ onGetStarted }) => {
     const { isConnected } = useAccount();
+    const { scrollY } = useScroll();
+
+    // Parallax Transforms
+    const gridY = useTransform(scrollY, [0, 500], [0, 100]);
+    const blur1Y = useTransform(scrollY, [0, 500], [0, -150]);
+    const blur2Y = useTransform(scrollY, [0, 500], [0, 150]);
 
     return (
-        <section className="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden">
-            {/* Animated background orbs */}
+        <section className="relative min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden">
+            {/* Absolute Parallax Gradients */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <motion.div
-                    className="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{ y: gridY }}
+                    className="absolute inset-0 grid-pattern opacity-[0.04]"
                 />
                 <motion.div
-                    className="absolute -bottom-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl"
-                    animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+                    style={{ y: blur1Y }}
+                    className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-emerald-600/10 blur-[120px] rounded-full"
+                />
+                <motion.div
+                    style={{ y: blur2Y }}
+                    className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[70%] bg-teal-600/10 blur-[130px] rounded-full"
                 />
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
-                {/* Tagline badge */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 pb-20">
+                {/* LIVE Badge */}
                 <motion.div
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-8"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="flex justify-center mb-8"
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
+                    transition={{ duration: 0.5 }}
                 >
-                    <Shield className="w-4 h-4" />
-                    Built on Creditcoin Testnet · Powered by Web3
+                    <div className="glass-card rounded-full px-4 py-1.5 flex items-center gap-2 border border-rose-500/30 shadow-[0_0_20px_rgba(244,63,94,0.15)]">
+                        <div className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                        </div>
+                        <span className="text-rose-400 text-xs font-bold tracking-wide">LIVE ON CREDITCOIN TESTNET</span>
+                        <div className="h-4 w-[1px] bg-slate-700/50 mx-1" />
+                        <Activity className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400 text-xs font-semibold">4/4 Nodes Syncing</span>
+                    </div>
                 </motion.div>
 
                 {/* Headline */}
                 <motion.h1
-                    className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6"
+                    className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-8"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.7 }}
+                    transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="text-white">Save Together,</span>
-                    <br />
-                    <span className="gradient-text">Grow Together</span>
+                    <span className="text-white text-shine">Trustless Savings.</span><br />
+                    <span className="gradient-text">Infinite Growth.</span>
                 </motion.h1>
 
                 {/* Subtext */}
                 <motion.p
-                    className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
+                    className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
                 >
-                    TrustCircle brings the ancient ROSCA savings model on-chain — transparent, trustless, and accessible to{' '}
-                    <span className="text-emerald-400 font-semibold">1.4 billion unbanked people</span> worldwide.
+                    The ancient ROSCA model brought strictly on-chain. <br className="hidden sm:block" />
+                    Built to bank the <span className="text-emerald-400">1.4 billion unbanked</span> with absolute transparency.
                 </motion.p>
 
-                {/* CTAs */}
+                {/* CTA */}
                 <motion.div
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-24"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45 }}
+                    transition={{ delay: 0.4 }}
                 >
                     {isConnected ? (
-                        <motion.button
-                            id="get-started-btn"
-                            className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-2xl glow hover:opacity-90 transition-opacity text-lg"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={onGetStarted}
-                        >
-                            Open Dashboard <ArrowRight className="w-5 h-5" />
-                        </motion.button>
+                        <Magnetic strength={0.3}>
+                            <button
+                                onClick={onGetStarted}
+                                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-10 py-5 rounded-full flex items-center gap-3 transition-all shadow-[0_0_40px_#10b98140] hover:shadow-[0_0_60px_#10b98160] relative overflow-hidden group"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">
+                                    Launch Dashboard <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </span>
+                            </button>
+                        </Magnetic>
                     ) : (
-                        <div className="flex flex-col items-center gap-3">
-                            <ConnectButton label="Connect Wallet to Start" />
-                            <p className="text-slate-500 text-sm">Connect your wallet to join or create circles</p>
+                        <div className="p-1 rounded-2xl glass-card inline-block">
+                            <ConnectButton label="Connect to Creditcoin" />
                         </div>
                     )}
                 </motion.div>
 
-                {/* Stats row */}
+                {/* Floating Stats */}
                 <motion.div
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
-                    initial={{ opacity: 0, y: 30 }}
+                    className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto"
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.5 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
                 >
-                    {stats.map((stat, i) => {
-                        const Icon = stat.icon;
-                        return (
-                            <motion.div
-                                key={stat.label}
-                                className="glass rounded-2xl p-4 card-hover"
-                                whileHover={{ scale: 1.03 }}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.6 + i * 0.1 }}
-                            >
-                                <Icon className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
-                                <div className="text-2xl font-extrabold gradient-text">{stat.value}</div>
-                                <div className="text-xs text-slate-400 mt-1">{stat.label}</div>
-                            </motion.div>
-                        );
-                    })}
+                    {stats.map((stat, i) => (
+                        <div key={i} className="glass-card p-6 rounded-2xl text-left border-t border-white/10 hover:border-emerald-500/30 transition-colors group">
+                            <stat.icon className="w-6 h-6 text-emerald-400 mb-4 group-hover:scale-110 transition-transform" />
+                            <div className="text-3xl font-black text-white mb-1">{stat.value}</div>
+                            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">{stat.label}</div>
+                        </div>
+                    ))}
                 </motion.div>
             </div>
         </section>

@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Dashboard from '@/components/Dashboard';
+import CustomCursor from '@/components/CustomCursor';
 
 const App: React.FC = () => {
     const { isConnected } = useAccount();
@@ -13,7 +14,9 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#020617]">
+        <div className="min-h-screen bg-slate-950 selection:bg-emerald-500/30">
+            <CustomCursor />
+            <div className="noise-overlay" />
             <Header onNavigate={(section) => {
                 if (section === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (section === 'dashboard') scrollToDashboard();

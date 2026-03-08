@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -5,6 +6,12 @@ import { createServer } from 'http';
 import { Server as IOServer } from 'socket.io';
 import circlesRouter from './routes/circles';
 import { errorHandler } from './middleware/errors';
+import { ContractPoller } from './services/contract-poller';
+
+// BigInt serialization polyfill for JSON.stringify
+(BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+};
 
 const app = express();
 const httpServer = createServer(app);
@@ -43,9 +50,11 @@ export const io = new IOServer(httpServer, {
 io.on('connection', (socket) => {
     console.log(`Client connected: ${socket.id}`);
 
-    socket.on('subscribe:circle', (circleId: string) => {
-        socket.join(`circle:${circleId}`);
-        console.log(`Socket ${socket.id} subscribed to circle ${circleId}`);
+    socket.on('subscribe:circle', (roomKey: string) => {
+        // roomKey is expected as "address:circleId"
+        const normalizedRoomKey = roomKey.toLowerCase();
+        socket.join(`circle:${normalizedRoomKey}`);
+        console.log(`Socket ${socket.id} subscribed to circle ${normalizedRoomKey}`);
     });
 
     socket.on('unsubscribe:circle', (circleId: string) => {
@@ -64,8 +73,18 @@ httpServer.listen(PORT, () => {
   │   Port: ${PORT}                           │
   │   Chain: Creditcoin Testnet            │
   │   Status: ✅ Running                   │
+  │   Polling: 🔴 LIVE every 10s           │
   └────────────────────────────────────────┘
   `);
+
+    // Start contract poller for real-time WebSocket updates
+    const poller = new ContractPoller(io);
+    poller.start();
+    app.set('services', { poller });
+
+    // Graceful shutdown
+    process.on('SIGTERM', () => { poller.stop(); process.exit(0); });
+    process.on('SIGINT', () => { poller.stop(); process.exit(0); });
 });
 
 export default app;

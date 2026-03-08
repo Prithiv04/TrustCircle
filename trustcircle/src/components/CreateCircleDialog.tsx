@@ -2,30 +2,51 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Loader2 } from 'lucide-react';
 import { useCreateCircle } from '@/hooks/useTrustCircle';
+import { useAccount } from 'wagmi';
 
 interface CreateCircleDialogProps {
     isOpen: boolean;
     onClose: () => void;
+    contractAddress: string;
 }
 
-const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose }) => {
+const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose, contractAddress }) => {
     const [form, setForm] = useState({
         name: '',
-        contributionAmount: '0.1',
-        maxMembers: '5',
+        contributionAmount: '0.01',
+        maxMembers: '10',
         roundDurationDays: '7',
     });
+    const [localError, setLocalError] = useState('');
 
-    const { createCircle, isPending, isConfirming, isSuccess, error } = useCreateCircle();
+    const { address } = useAccount();
+    const { createCircle, hash, isPending, isConfirming, isSuccess, error } = useCreateCircle();
+
+
+    const validateContribution = (value: string) => {
+        const num = parseFloat(value);
+        if (num !== 0.01) {  // EXACT MATCH as per circle.md requirements
+            return "Must be EXACTLY 0.01 tCTC (contract requirement)";
+        }
+        return "";
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        createCircle(
-            form.name,
-            form.contributionAmount,
-            parseInt(form.maxMembers),
-            parseInt(form.roundDurationDays)
-        );
+        setLocalError('');
+
+        const err = validateContribution(form.contributionAmount);
+        if (err) {
+            setLocalError(err);
+            return;
+        }
+
+        if (!address) {
+            setLocalError('Please connect your wallet first.');
+            return;
+        }
+
+        createCircle(address, contractAddress);
     };
 
     const handleChange = (key: keyof typeof form) => (
@@ -77,11 +98,19 @@ const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose
                                     <div className="text-5xl mb-4">🎉</div>
                                     <p className="text-emerald-400 font-bold text-lg">Circle Created!</p>
                                     <p className="text-slate-400 text-sm mt-2">Your ROSCA circle is live on Creditcoin</p>
+                                    <a
+                                        href={`https://testnet.creditcoin.io/tx/${hash}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-block mt-4 text-xs text-emerald-500/70 hover:text-emerald-400 underline"
+                                    >
+                                        View on Block Explorer
+                                    </a>
                                     <button
-                                        className="mt-6 px-6 py-2 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-xl font-medium text-sm"
+                                        className="block mx-auto mt-6 px-10 py-3 bg-emerald-500 text-slate-900 rounded-xl font-black text-sm hover:scale-105 transition-transform"
                                         onClick={onClose}
                                     >
-                                        Close
+                                        Go to Dashboard
                                     </button>
                                 </div>
                             ) : (
@@ -104,7 +133,7 @@ const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose
                                             <input
                                                 id="contribution-amount-input"
                                                 type="number"
-                                                step="0.01"
+                                                step="0.001"
                                                 min="0.001"
                                                 required
                                                 className={inputClass}
@@ -151,7 +180,13 @@ const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose
                                         </span></p>
                                     </div>
 
-                                    {error && (
+                                    {localError && (
+                                        <p className="text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2">
+                                            {localError}
+                                        </p>
+                                    )}
+
+                                    {error && !localError && (
                                         <p className="text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2">
                                             {error.message?.split('\n')[0]}
                                         </p>
@@ -175,6 +210,22 @@ const CreateCircleDialog: React.FC<CreateCircleDialogProps> = ({ isOpen, onClose
                                             </>
                                         )}
                                     </motion.button>
+
+                                    {isConfirming && (
+                                        <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+                                            <p className="text-emerald-400 font-bold text-sm">Taking too long?</p>
+                                            <p className="text-slate-500 text-[10px] mt-1 px-8 leading-relaxed">
+                                                The network is busy. If your wallet says "Success", you can skip this wait and refresh the dashboard.
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="mt-3 px-4 py-1.5 bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-emerald-400 rounded-lg text-[10px] transition-all border border-white/5"
+                                                onClick={onClose}
+                                            >
+                                                Skip Wait & Check Dashboard
+                                            </button>
+                                        </div>
+                                    )}
                                 </form>
                             )}
                         </div>

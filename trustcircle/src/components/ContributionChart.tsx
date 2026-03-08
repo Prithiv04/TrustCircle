@@ -3,23 +3,38 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { motion } from 'framer-motion';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, Wifi, WifiOff } from 'lucide-react';
+import { PotUpdate } from '@/hooks/useLiveCircle';
+import { formatTCTC } from '@/config/contracts';
 
 interface ContributionChartProps {
     circleId?: number;
-    data?: { round: number; amount: number; cumulative: number }[];
+    contractAddress?: string;
+    liveData?: PotUpdate[];
+    isConnected?: boolean;
 }
 
-// Generate mock historical data (replace with actual contract event data)
-const generateMockData = (rounds = 6) =>
-    Array.from({ length: rounds }, (_, i) => ({
+// Generate mock seed data for visual appeal before live data arrives
+const generateSeedData = () =>
+    Array.from({ length: 6 }, (_, i) => ({
         round: i + 1,
-        amount: 0.1 + Math.random() * 0.05,
-        cumulative: (i + 1) * (0.1 + Math.random() * 0.02),
+        potSize: parseFloat((0.1 * (i + 1) + Math.random() * 0.05).toFixed(4)),
+        timestamp: Date.now() - (6 - i) * 10_000,
     }));
 
-const ContributionChart: React.FC<ContributionChartProps> = ({ data }) => {
-    const chartData = data?.length ? data : generateMockData();
+const ContributionChart: React.FC<ContributionChartProps> = ({
+    liveData = [],
+    isConnected = false,
+}) => {
+    // Merge seed data with live data (live data takes precedence once it arrives)
+    const seedData = generateSeedData();
+    const chartData = liveData.length > 0
+        ? liveData.map((d, i) => ({
+            round: i + 1,
+            potSize: parseFloat(d.potSize),
+            timestamp: d.timestamp,
+        }))
+        : seedData;
 
     return (
         <motion.div
@@ -28,15 +43,30 @@ const ContributionChart: React.FC<ContributionChartProps> = ({ data }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-semibold text-white">Contribution History</h3>
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-base font-semibold text-white">Live Pot Growth</h3>
+                </div>
+
+                {/* Connection status indicator */}
+                <div className={`flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full border ${isConnected
+                    ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
+                    : 'text-slate-500 bg-slate-700/30 border-slate-600/20'
+                    }`}>
+                    {isConnected ? (
+                        <><Wifi className="w-3 h-3" /><span className="animate-pulse">LIVE</span></>
+                    ) : (
+                        <><WifiOff className="w-3 h-3" />Offline</>
+                    )}
+                </div>
             </div>
+
             <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                         <defs>
-                            <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="colorPot" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                             </linearGradient>
@@ -44,7 +74,7 @@ const ContributionChart: React.FC<ContributionChartProps> = ({ data }) => {
                         <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                         <XAxis
                             dataKey="round"
-                            tickFormatter={(v) => `R${v}`}
+                            tickFormatter={(v) => `#${v}`}
                             tick={{ fill: '#64748b', fontSize: 11 }}
                             axisLine={false}
                             tickLine={false}
@@ -53,6 +83,7 @@ const ContributionChart: React.FC<ContributionChartProps> = ({ data }) => {
                             tick={{ fill: '#64748b', fontSize: 11 }}
                             axisLine={false}
                             tickLine={false}
+                            tickFormatter={(v) => `${v}`}
                         />
                         <Tooltip
                             contentStyle={{
@@ -61,19 +92,27 @@ const ContributionChart: React.FC<ContributionChartProps> = ({ data }) => {
                                 borderRadius: '8px',
                                 color: '#f8fafc',
                             }}
-                            formatter={(value: number) => [`${value.toFixed(3)} tCTC`]}
-                            labelFormatter={(label) => `Round ${label}`}
+                            formatter={(value: any) => [`${parseFloat(value).toFixed(4)} tCTC`, 'Pot Size']}
+                            labelFormatter={(label) => `Update #${label}`}
                         />
                         <Area
                             type="monotone"
-                            dataKey="cumulative"
+                            dataKey="potSize"
                             stroke="#10b981"
                             strokeWidth={2}
-                            fill="url(#colorCumulative)"
+                            fill="url(#colorPot)"
+                            isAnimationActive={true}
+                            animationDuration={600}
                         />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
+
+            {liveData.length > 0 && (
+                <p className="text-xs text-slate-500 text-right mt-2">
+                    {liveData.length} updates · Last: {new Date(liveData[liveData.length - 1].timestamp).toLocaleTimeString()}
+                </p>
+            )}
         </motion.div>
     );
 };

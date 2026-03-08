@@ -16,7 +16,8 @@ function getRedis(): Redis | null {
             lazyConnect: true,
         });
         redis.on('error', (err) => {
-            console.warn('[Redis] Connection error:', err.message);
+            // Muted to reduce log noise (Redis is optional)
+            // console.warn('[Redis] Connection error:', err.message);
             redis = null;
         });
         return redis;

@@ -1,4 +1,6 @@
 import { ethers } from 'ethers';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const CREDITCOIN_RPC =
     process.env.CREDITCOIN_RPC_URL || 'https://rpc.testnet.creditcoin.org';
@@ -6,15 +8,15 @@ const CREDITCOIN_RPC =
 // Create a shared provider instance
 export const provider = new ethers.JsonRpcProvider(CREDITCOIN_RPC);
 
-// TrustCircle contract ABI (minimal for backend read operations)
+// TrustCircle contract ABI (Simplified to match live contracts on Creditcoin Testnet)
 export const TRUSTCIRCLE_ABI = [
-    'function getCircleCount() view returns (uint256)',
-    'function getCircle(uint256 _circleId) view returns (string name, address creator, uint256 contributionAmount, uint256 maxMembers, uint256 currentMembers, uint256 currentRound, uint256 totalRounds, uint256 nextPayoutTime, bool isActive)',
-    'function getMembers(uint256 _circleId) view returns (address[])',
-    'function hasContributed(uint256 _circleId, address _member, uint256 _round) view returns (bool)',
-    'event CircleCreated(uint256 indexed circleId, address indexed creator, string name, uint256 contributionAmount, uint256 memberCount)',
-    'event ContributionMade(uint256 indexed circleId, address indexed member, uint256 amount, uint256 round)',
-    'event PayoutDistributed(uint256 indexed circleId, address indexed recipient, uint256 amount, uint256 round)',
+    'function nextCircleId() view returns (uint256)',
+    'function circles(uint256 circleId, uint256 index) view returns (address)',
+    'function pots(uint256 circleId) view returns (uint256)',
+    'function currentMember(uint256 circleId) view returns (uint256)',
+    'function contribute(uint256 circleId) external payable',
+    'function claim(uint256 circleId) external',
+    'function createCircle(address[10] _members) external returns (uint256)',
 ];
 
 // Contract addresses from your 4 deployments

@@ -10,7 +10,7 @@ export const creditcoinTestnet = defineChain({
     },
     rpcUrls: {
         default: {
-            http: [import.meta.env.VITE_CREDITCOIN_RPC || 'https://rpc.testnet.creditcoin.org'],
+            http: [import.meta.env.VITE_CREDITCOIN_RPC || 'https://rpc.cc3-testnet.creditcoin.network'],
         },
     },
     blockExplorers: {
