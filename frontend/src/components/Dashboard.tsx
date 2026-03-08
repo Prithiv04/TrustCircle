@@ -204,9 +204,10 @@ const Dashboard: React.FC = () => {
     const { liveData: actualLiveData, isConnected: socketConnected } = useLiveCircle(0, TRUSTCIRCLE_ADDRESSES[activeTab]);
 
     const demoLiveData = [
-        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0100", potSizeRaw: "10000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 30000 },
-        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0300", potSizeRaw: "30000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 20000 },
-        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0700", potSizeRaw: "70000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 10000 },
+        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0100", potSizeRaw: "10000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 40000 },
+        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0300", potSizeRaw: "30000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 30000 },
+        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0700", potSizeRaw: "70000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 20000 },
+        { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.1000", potSizeRaw: "100000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 10000 },
     ];
 
     const liveData = USE_PRESET_DATA ? demoLiveData : actualLiveData;
