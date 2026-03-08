@@ -14,7 +14,7 @@ interface ContributionChartProps {
     isConnected?: boolean;
 }
 
-// Generate mock seed data for visual appeal before live data arrives
+// Generate seed data for visual appeal before live data arrives
 const generateSeedData = () =>
     Array.from({ length: 6 }, (_, i) => ({
         round: i + 1,

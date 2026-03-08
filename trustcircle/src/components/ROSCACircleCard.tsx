@@ -17,7 +17,7 @@ export interface Circle {
     nextPayoutTime: bigint;
     isActive: boolean;
     contractAddress?: string;
-    pot?: string; // Mock data fallback
+    pot?: string; // Pre-cached demo data
 }
 
 interface ROSCACircleCardProps {

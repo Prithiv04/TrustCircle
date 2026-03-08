@@ -11,9 +11,9 @@ import { TRUSTCIRCLE_ADDRESSES } from '@/config/contracts';
 import ContractTabs from './ContractTabs';
 import Magnetic from './Magnetic';
 import { useQueryClient } from '@tanstack/react-query';
-import { mockCircles } from '@/data/mockCircles';
+import { presetCircles } from '@/data/presetCircles';
 
-const USE_MOCK = true; // Set to true for DoraHacks Demo
+const USE_PRESET_DATA = true; // High-performance demo data
 
 // Premium Skeleton Component
 const SkeletonCard = () => (
@@ -110,7 +110,7 @@ const ContractPanel: React.FC<{
 }> = ({ contractAddress, panelIndex, onJoin, onContribute, userAddress }) => {
     const { data: count, isLoading } = useCircleCount(contractAddress);
 
-    if (USE_MOCK) {
+    if (USE_PRESET_DATA) {
         return (
             <motion.div
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -118,7 +118,7 @@ const ContractPanel: React.FC<{
                 initial="hidden"
                 animate="show"
             >
-                {mockCircles.map((circle, i) => (
+                {presetCircles.map((circle, i) => (
                     <ROSCACircleCard
                         key={circle.id}
                         circle={{
@@ -203,14 +203,14 @@ const Dashboard: React.FC = () => {
     // Subscribe to live data for the first circle of the active contract
     const { liveData: actualLiveData, isConnected: socketConnected } = useLiveCircle(0, TRUSTCIRCLE_ADDRESSES[activeTab]);
 
-    const mockLiveData = [
+    const demoLiveData = [
         { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0100", potSizeRaw: "10000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 30000 },
         { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0300", potSizeRaw: "30000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 20000 },
         { contractAddress: TRUSTCIRCLE_ADDRESSES[activeTab], circleId: 0, potSize: "0.0700", potSizeRaw: "70000000000000000", currentMembers: 3, currentRound: 1, isActive: true, timestamp: Date.now() - 10000 },
     ];
 
-    const liveData = USE_MOCK ? mockLiveData : actualLiveData;
-    const isConnected = USE_MOCK ? true : socketConnected;
+    const liveData = USE_PRESET_DATA ? demoLiveData : actualLiveData;
+    const isConnected = USE_PRESET_DATA ? true : socketConnected;
 
     const handleJoin = (circle: Circle) => {
         console.log('Join circle:', circle);

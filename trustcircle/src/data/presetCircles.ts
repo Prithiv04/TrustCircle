@@ -1,4 +1,4 @@
-export interface MockCircle {
+export interface PresetCircle {
     id: number;
     name: string;
     pot: string;
@@ -9,7 +9,7 @@ export interface MockCircle {
     contributionAmount: string;
 }
 
-export const mockCircles: MockCircle[] = [
+export const presetCircles: PresetCircle[] = [
     {
         id: 0,
         name: "Chennai Farmers Circle",
