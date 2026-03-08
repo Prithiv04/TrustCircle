@@ -118,26 +118,41 @@ const ContractPanel: React.FC<{
                 initial="hidden"
                 animate="show"
             >
-                {presetCircles.map((circle, i) => (
-                    <ROSCACircleCard
-                        key={circle.id}
-                        circle={{
-                            ...circle,
-                            contributionAmount: BigInt(parseFloat(circle.contributionAmount) * 1e18),
-                            maxMembers: BigInt(circle.maxMembers),
-                            currentMembers: BigInt(circle.currentMembers),
-                            currentRound: 1n,
-                            totalRounds: 10n,
-                            nextPayoutTime: 0n,
-                            isActive: true,
-                            contractAddress: contractAddress,
-                        } as any}
-                        index={i}
-                        onJoin={onJoin}
-                        onContribute={onContribute}
-                        userAddress={userAddress}
-                    />
-                ))}
+                {presetCircles.map((circle, i) => {
+                    // Show different circles for different tabs to make the demo impactful
+                    // Tab 0: Circle 0,1
+                    // Tab 1: Circle 2
+                    // Tab 2: Circle 3
+                    // Tab 3: All circles
+                    const shouldShow =
+                        (panelIndex === 0 && (i === 0 || i === 1)) ||
+                        (panelIndex === 1 && i === 2) ||
+                        (panelIndex === 2 && i === 3) ||
+                        (panelIndex === 3);
+
+                    if (!shouldShow) return null;
+
+                    return (
+                        <ROSCACircleCard
+                            key={circle.id}
+                            circle={{
+                                ...circle,
+                                contributionAmount: BigInt(parseFloat(circle.contributionAmount) * 1e18),
+                                maxMembers: BigInt(circle.maxMembers),
+                                currentMembers: BigInt(circle.currentMembers),
+                                currentRound: 1n,
+                                totalRounds: 10n,
+                                nextPayoutTime: 0n,
+                                isActive: true,
+                                contractAddress: contractAddress,
+                            } as any}
+                            index={i}
+                            onJoin={onJoin}
+                            onContribute={onContribute}
+                            userAddress={userAddress}
+                        />
+                    );
+                })}
             </motion.div>
         );
     }

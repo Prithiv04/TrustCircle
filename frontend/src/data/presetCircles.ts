@@ -39,5 +39,15 @@ export const presetCircles: PresetCircle[] = [
         contributions: [true, true, false, false, false, false, false, false, false, false],
         creator: "0x68409ee9d9D9b7DfdEb4b2dd2bddb7f1312cB947",
         contributionAmount: "0.01",
+    },
+    {
+        id: 3,
+        name: "Global Savings Pool",
+        pot: "0.2500",
+        currentMembers: 8,
+        maxMembers: 12,
+        contributions: [true, true, true, true, true, true, true, true, false, false, false, false],
+        creator: "0x6Cee7aA2E56053e2656a20097eAECbd9AD786E17",
+        contributionAmount: "0.05",
     }
 ];
